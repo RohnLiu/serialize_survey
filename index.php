@@ -41,6 +41,7 @@ class Serialize_Survey
             $etime                            = microtime(true);
             $pack_time                        = $etime - $stime;
             $this->result[$type]['pack_time'] = $this->_formatTime($pack_time);
+            $this->result[$type]['package'] = $this->convert(strlen($str));
             //拆包
             $function = "un{$function}";
             for($i = 0; $i < $times; $i++){
@@ -222,6 +223,13 @@ class Serialize_Survey
     function unserialize_pack($str){
 
         return unserialize($str);
+    }
+
+    function convert($size){
+
+        $unit = array('B', 'K', 'M', 'G', 'T', 'P');
+
+        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
     }
 
     private function _formatTime($time){

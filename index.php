@@ -234,7 +234,7 @@ class Serialize_Survey
 
     private function _formatTime($time){
 
-        return number_format($time, 7, '.', '');
+        return number_format($time, 7, '.', '') * 10000000;
     }
 
     private function _setData(){

@@ -23,14 +23,18 @@ class Serialize_Survey
         'serialize' => 'serialize_pack',
     );
 
-    function __construct($times = self::RUN_TIMES){
-
-        $this->run($times);
-    }
-
-    public function run($times){
+    function __construct(){
 
         $this->_setData();
+    }
+
+    public function ab($function){
+
+        return call_user_func_array(array($this, $function), array(1));
+    }
+
+    public function run($times = self::RUN_TIMES){
+
         foreach($this->func_arr as $type => $function){
             $str = '';
             //封包
@@ -44,7 +48,6 @@ class Serialize_Survey
             $pack_time                        = $etime - $stime;
             $this->result[$type]['pack_time'] = $this->_formatTime($pack_time);
             $this->result[$type]['package']   = $this->convert(strlen($str));
-            $cpu_data                         = getrusage();
             $this->result[$type]['cpu']       = $ecpu - $scpu;
             //拆包
             $function = "un{$function}";
@@ -255,4 +258,9 @@ class Serialize_Survey
     }
 }
 
-new Serialize_Survey();
+$ss = new Serialize_Survey();
+if(isset($_GET['serialize'])){
+    echo $ss->ab($_GET['serialize']);
+}else{
+    $ss->run();
+}
